@@ -1,26 +1,88 @@
-@import "tailwindcss";
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
 
+/* ---------- Base ---------- */
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  color-scheme: light;
+  /* site width token (edit once, used below) */
+  --page-max: 80rem; /* 1280px */
 }
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+html, body { height: 100%; background:#fff; }
+html { scroll-behavior: smooth; }       /* apply to html, not * */
+*, *::before, *::after { box-sizing: border-box; }
+
+/* ---------- Containers ---------- */
+/* Default centered container (current behavior) */
+.container-xl {
+  max-width: var(--page-max);
+  margin-left: auto; margin-right: auto;
+  padding-left: 1rem; padding-right: 1rem;
+}
+@media (min-width: 640px) { .container-xl { padding-left:1.5rem; padding-right:1.5rem; } }
+@media (min-width: 1024px){ .container-xl { padding-left:2rem;   padding-right:2rem;   } }
+
+/* Centered page content (used under full-bleed hero) */
+.content {
+  max-width: var(--page-max);         /* uses 80rem from :root */
+  margin-left: auto;
+  margin-right: auto;
+  padding-left: 1rem;
+  padding-right: 1rem;
+}
+@media (min-width: 640px) { .content { padding-left: 1.5rem; padding-right: 1.5rem; } }
+@media (min-width: 1024px){ .content { padding-left: 2rem;   padding-right: 2rem;   } }
+
+/* FLUID variant (use when you want the whole page full-width) */
+.container-xl--fluid {
+  max-width: none;
+  padding-left: 0; padding-right: 0;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+/* Section padding helper (use with fluid layout) */
+.section {
+  padding-left: 1rem; padding-right: 1rem;
+}
+@media (min-width: 640px) { .section { padding-left:1.5rem; padding-right:1.5rem; } }
+@media (min-width: 1024px){ .section { padding-left:2rem;   padding-right:2rem;   } }
+
+/* Break a block out of any container to be edge-to-edge */
+.full-bleed {
+  margin-left: calc(50% - 50vw);
+  margin-right: calc(50% - 50vw);
+  width: 100vw;
+  border-radius: 0 !important;
+  border-width: 0 !important;
+}
+
+/* Remove container gutters for a single block while keeping max-width */
+.no-gutters { margin-left: -1rem; margin-right: -1rem; }
+@media (min-width: 640px) { .no-gutters { margin-left:-1.5rem; margin-right:-1.5rem; } }
+@media (min-width: 1024px){ .no-gutters { margin-left:-2rem;   margin-right:-2rem;   } }
+
+/* ---------- Components (light look) ---------- */
+@layer components {
+  .btn-primary {
+    @apply inline-flex items-center gap-2 rounded-2xl px-6 py-3 font-semibold
+           shadow-sm bg-brand-accent text-black hover:opacity-90
+           focus:outline-none focus-visible:ring-2 focus-visible:ring-brand-accent/60
+           focus-visible:ring-offset-2 transition;
+  }
+
+  .btn-ghost {
+    @apply inline-flex items-center gap-2 rounded-2xl px-6 py-3 font-semibold
+           border border-gray-300 text-gray-700 hover:bg-gray-50
+           focus:outline-none focus-visible:ring-2 focus-visible:ring-gray-300
+           focus-visible:ring-offset-2 transition;
+  }
+
+  .card {
+    @apply rounded-2xl bg-white border border-gray-200 shadow-sm;
   }
 }
 
-body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+/* ---------- Motion preference (nice-to-have) ---------- */
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
 }
