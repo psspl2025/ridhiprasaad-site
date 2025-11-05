@@ -52,7 +52,7 @@ export default function Footer() {
             <div className="font-semibold mb-3">Company</div>
             <ul className="space-y-2">
               <li><FooterLink href="/about">About</FooterLink></li>
-              <li><FooterLink href="/projects">Projects</FooterLink></li>
+              <li><FooterLink href="/products">Products</FooterLink></li>{/* ✅ updated */}
               <li><FooterLink href="/contact">Get Quote</FooterLink></li>
             </ul>
           </nav>

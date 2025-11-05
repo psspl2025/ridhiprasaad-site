@@ -56,7 +56,7 @@ export default function HomePage() {
 
             <div className="mt-8 flex flex-wrap gap-4">
               <Link href="/services" className="btn-primary">Explore Services</Link>
-              <Link href="/projects" className="btn-ghost">Case Studies</Link>
+              <Link href="/products" className="btn-ghost">Products</Link> {/* ✅ updated */}
               <Link href="/contact" className="btn-ghost">Contact</Link>
             </div>
           </div>

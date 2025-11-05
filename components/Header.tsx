@@ -10,7 +10,7 @@ const nav = [
   { href: "/", label: "Home" },
   { href: "/about", label: "About" },
   { href: "/services", label: "Services" },
-  { href: "/projects", label: "Projects" }, // was "Products" → corrected label
+  { href: "/products", label: "Products" }, // ✅ updated
   { href: "/contact", label: "Contact" },
 ];
 
