@@ -1,14 +1,18 @@
 "use client";
 
 import Image from "next/image";
-import { HTMLAttributes, ReactNode, useId } from "react";
+import type { CSSProperties, HTMLAttributes, ReactNode } from "react";
+import { useId } from "react";
 
-// Custom prop types
+/* -------------------------------- Types -------------------------------- */
+
 type Align = "left" | "center" | "right";
 type Dir = "r" | "l" | "t" | "b" | "tr" | "tl" | "br" | "bl";
 
 type CustomProps = {
+  /** Main heading */
   title: string;
+  /** Optional subheading */
   subtitle?: string;
 
   /** Background image src, e.g. "/hero/services-hero.webp" */
@@ -18,11 +22,12 @@ type CustomProps = {
   decorative?: boolean;
   imageAlt?: string;
 
+  /** Optional UI blocks */
   actions?: ReactNode;
   breadcrumb?: ReactNode;
 
-  /** Tailwind classes after bg-gradient-to-* (colors/alphas) */
-  overlayClassName?: string; // e.g. "from-slate-900/70 via-slate-900/40 to-transparent"
+  /** Tailwind classes appended after bg-gradient-to-* (e.g. "from-slate-900/70 via-slate-900/40 to-transparent") */
+  overlayClassName?: string;
   /** Gradient direction */
   overlayDir?: Dir;
 
@@ -45,8 +50,8 @@ type CustomProps = {
   placeholder?: "blur" | "empty";
   blurDataURL?: string;
 
-  /** Minimum height utility classes */
-  minH?: string; // e.g. "min-h-[420px] md:min-h-[560px]"
+  /** Minimum height utility classes (unified default height site-wide) */
+  minH?: string; // e.g. "min-h-[320px] md:min-h-[440px]"
 
   /** Text alignment inside hero */
   align?: Align;
@@ -55,8 +60,9 @@ type CustomProps = {
   bgColor?: string; // tailwind color classes, e.g. "bg-slate-900"
 };
 
-// Only allow actual HTML attributes (not custom props) to pass via the spread
 type Props = CustomProps & Omit<HTMLAttributes<HTMLElement>, keyof CustomProps>;
+
+/* ------------------------------ Component ------------------------------ */
 
 export default function PageHero({
   title,
@@ -74,13 +80,17 @@ export default function PageHero({
   imageClassName = "",
   objectPosition,
   placeholder = "empty",
-  blurDataURL,
-  minH = "min-h-[320px] md:min-h-[480px]",
+  /** alias so identifier exists in scope when passing to <Image/> */
+  blurDataURL: blurDataURLProp,
+  // ✅ unified default height across the site
+  minH = "min-h-[320px] md:min-h-[440px]",
   align = "left",
   bgColor = "bg-slate-900",
   className,
-  ...rest // Only valid HTML attributes flow here, NOT custom props!
+  ...rest
 }: Props) {
+  const headingId = useId();
+
   const frame = fullBleed
     ? "mx-[calc(50%-50vw)] w-screen rounded-none border-0"
     : "rounded-3xl border border-gray-200";
@@ -103,8 +113,6 @@ export default function PageHero({
       ? "items-end text-right"
       : "items-start text-left";
 
-  const headingId = useId();
-
   return (
     <section
       className={`relative isolate overflow-hidden ${frame} ${bgColor} ${minH} ${className ?? ""}`}
@@ -112,26 +120,31 @@ export default function PageHero({
       {...rest}
     >
       {/* Background image + overlay */}
-      <div className="absolute inset-0">
+      <div className="absolute inset-0 -z-10">
         <Image
           src={image}
           alt={decorative ? "" : imageAlt}
           aria-hidden={decorative ? "true" : undefined}
+          role={decorative ? "presentation" : undefined}
           fill
           sizes="100vw"
           priority={priority}
-          className={`object-cover ${imageClassName}`}
-          style={objectPosition ? ({ objectPosition } as React.CSSProperties) : undefined}
+          className={`h-full w-full object-cover ${imageClassName}`}
+          style={objectPosition ? ({ objectPosition } as CSSProperties) : undefined}
           placeholder={placeholder}
-          blurDataURL={placeholder === "blur" ? blurDataURL : undefined}
+          /* only pass blurDataURL when using blur placeholder */
+          blurDataURL={placeholder === "blur" ? blurDataURLProp : undefined}
         />
-        {/* main overlay */}
+
+        {/* Gradient overlay */}
         <div className={`absolute inset-0 ${dirMap[overlayDir]} ${overlayClassName}`} />
-        {/* optional bottom fade to blend into page */}
+
+        {/* Optional bottom fade to blend into page */}
         {bottomFade && (
           <div className="pointer-events-none absolute inset-x-0 bottom-0 h-24 bg-gradient-to-b from-transparent to-black/10" />
         )}
       </div>
+
       {/* Foreground content (constrained to site width) */}
       <div className="relative z-10 content py-14 md:py-16">
         <div className={`flex flex-col gap-0 ${alignWrap}`}>
@@ -140,18 +153,17 @@ export default function PageHero({
               {breadcrumb}
             </nav>
           )}
+
           <h1
             id={headingId}
             className="font-display text-4xl md:text-5xl font-extrabold text-white drop-shadow-sm"
           >
             {title}
           </h1>
-          {subtitle && (
-            <p className="mt-3 max-w-3xl text-white/90">{subtitle}</p>
-          )}
-          {actions && (
-            <div className="mt-6 flex flex-wrap gap-3">{actions}</div>
-          )}
+
+          {subtitle && <p className="mt-3 max-w-3xl text-white/90">{subtitle}</p>}
+
+          {actions && <div className="mt-6 flex flex-wrap gap-3">{actions}</div>}
         </div>
       </div>
     </section>
