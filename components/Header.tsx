@@ -13,9 +13,7 @@ const nav = [
   { href: "/", label: "Home" },
   { href: "/about", label: "About" },
   { href: "/services", label: "Services" },
-  { href: "/projects", label: "Projects" },
-  { href: "/pricing", label: "Pricing" },
-  { href: "/blog", label: "Blog" },
+  { href: "/projects", label: "Products" },
   { href: "/contact", label: "Contact" },
   // Example same-page sections (uncomment if you add these IDs on /):
   // { href: "/#services", label: "What We Do" },

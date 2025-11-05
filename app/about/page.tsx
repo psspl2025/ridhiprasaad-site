@@ -57,7 +57,7 @@ export default function AboutPage() {
         title="Expertise That Drives Results."
         subtitle="Engineering leadership, proven execution, and strong industry partnerships across power & process sectors."
         align="center"
-        minHeightClass="min-h-[420px] md:min-h-[600px]"
+        minH="min-h-[420px] md:min-h-[600px]"
         objectPosition="center 42%"
         actions={
           <>
