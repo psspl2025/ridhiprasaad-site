@@ -1,23 +1,17 @@
 "use client";
 
 import Link from "next/link";
-import { usePathname, useSearchParams } from "next/navigation";
+import { usePathname } from "next/navigation";
 import { Menu } from "lucide-react";
 import { useEffect, useMemo, useState } from "react";
 
-/**
- * Add hash sections to nav (optional). If your homepage has sections with IDs,
- * these will "scroll spy" highlight when visible.
- */
+/** Main nav */
 const nav = [
   { href: "/", label: "Home" },
   { href: "/about", label: "About" },
   { href: "/services", label: "Services" },
-  { href: "/projects", label: "Products" },
+  { href: "/projects", label: "Projects" }, // was "Products" → corrected label
   { href: "/contact", label: "Contact" },
-  // Example same-page sections (uncomment if you add these IDs on /):
-  // { href: "/#services", label: "What We Do" },
-  // { href: "/#stats", label: "Stats" },
 ];
 
 function useHeaderElevation(threshold = 4) {
@@ -32,7 +26,6 @@ function useHeaderElevation(threshold = 4) {
 }
 
 function useScrollSpy(hashes: string[]) {
-  // Track active hash (#section) on current page.
   const [activeHash, setActiveHash] = useState<string | null>(null);
 
   useEffect(() => {
@@ -42,21 +35,16 @@ function useScrollSpy(hashes: string[]) {
     const els = ids
       .map((id) => document.getElementById(id))
       .filter((el): el is HTMLElement => !!el);
-
     if (!els.length) return;
 
     const observer = new IntersectionObserver(
       (entries) => {
-        // Pick the most visible entry
         const visible = entries
           .filter((e) => e.isIntersecting)
           .sort((a, b) => (b.intersectionRatio || 0) - (a.intersectionRatio || 0))[0];
         if (visible?.target?.id) setActiveHash(`#${visible.target.id}`);
       },
-      {
-        rootMargin: "-20% 0px -60% 0px", // activate slightly before center
-        threshold: [0.25, 0.5, 0.75],
-      }
+      { rootMargin: "-20% 0px -60% 0px", threshold: [0.25, 0.5, 0.75] }
     );
 
     els.forEach((el) => observer.observe(el));
@@ -77,8 +65,6 @@ function NavLink({
   isActive: boolean;
   onClick?: () => void;
 }) {
-  // Animated underline on hover + solid gold when active.
-  // Uses a pseudo-element `after:` bar that grows on hover, stays full when active.
   return (
     <Link
       href={href}
@@ -86,7 +72,6 @@ function NavLink({
       className={[
         "relative text-sm font-medium transition",
         isActive ? "text-gray-900" : "text-gray-600 hover:text-gray-900",
-        // underline animation rail
         "after:absolute after:-bottom-1 after:left-0 after:h-[2px] after:rounded-full",
         isActive
           ? "after:w-full after:bg-amber-500"
@@ -101,10 +86,8 @@ function NavLink({
 
 export default function Header() {
   const pathname = usePathname();
-  const search = useSearchParams();
   const elevated = useHeaderElevation(4);
 
-  // Collect hash targets on *this* page (only for same-page anchors)
   const samePageHashes = useMemo(
     () =>
       nav
@@ -120,18 +103,13 @@ export default function Header() {
   const [open, setOpen] = useState(false);
 
   const isActive = (href: string) => {
-    // Hash-aware active state:
-    // - If link has a hash and current hash is active, mark active.
-    // - Else fall back to pathname match.
     if (href.includes("#") && typeof window !== "undefined") {
       const [base, hash] = href.split("#");
       const onSamePath = base === pathname;
       if (onSamePath && activeHash && activeHash === `#${hash}`) return true;
-      // If no scrollspy yet, still consider active when URL hash matches
       if (onSamePath && window.location.hash === `#${hash}`) return true;
       return false;
     }
-    // exact match by pathname (ignores query)
     return href === pathname;
   };
 
@@ -143,15 +121,10 @@ export default function Header() {
       ].join(" ")}
     >
       <div className="container-xl flex h-16 items-center justify-between">
-        {/* Logo */}
-        <Link
-          href="/"
-          className="font-display text-xl font-extrabold tracking-tight text-gray-900"
-        >
+        <Link href="/" className="font-display text-xl font-extrabold tracking-tight text-gray-900">
           Ridhiprasaad<span className="text-brand-accent">.</span>
         </Link>
 
-        {/* Desktop Nav */}
         <nav className="hidden md:flex items-center gap-6">
           {nav.map((n) => (
             <NavLink key={n.href} href={n.href} label={n.label} isActive={isActive(n.href)} />
@@ -161,7 +134,6 @@ export default function Header() {
           </Link>
         </nav>
 
-        {/* Mobile menu toggle */}
         <button
           className="md:hidden text-gray-700"
           onClick={() => setOpen((v) => !v)}
@@ -171,7 +143,6 @@ export default function Header() {
         </button>
       </div>
 
-      {/* Mobile dropdown */}
       {open && (
         <div className="md:hidden border-t border-gray-200 bg-white/95 backdrop-blur-sm">
           <div className="container-xl py-3 grid gap-3">
