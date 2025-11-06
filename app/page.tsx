@@ -5,8 +5,8 @@ import PageHero from "@/components/PageHero";
 // Icon SVGs and card config
 const serviceCards = [
   {
-    title: "Supply & Spares",
-    desc: "Valves, bearings, seals, motors, gearboxes, instruments — with MTCs & docs.",
+    title: "Spare Parts Supply",
+    desc: "Supply of certified industrial spares—valves, bearings, seals, motors, gearboxes, and process instruments with full technical documentation.",
     icon: (
       <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"
         className="w-10 h-10 text-yellow-700 group-hover:scale-110 transition-transform duration-200"
@@ -22,8 +22,8 @@ const serviceCards = [
     link: "/products"
   },
   {
-    title: "EPC Procurement",
-    desc: "Bid support, sourcing, ITP/inspection coordination, handover dossiers.",
+    title: "EPC Projects",
+    desc: "End-to-end EPC procurement, sourcing, inspection coordination, technical documentation, and commissioning—all managed for maximum uptime and compliance.",
     icon: (
       <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"
         className="w-10 h-10 text-blue-700 group-hover:scale-110 transition-transform duration-200"
@@ -40,8 +40,8 @@ const serviceCards = [
     link: "/contact"
   },
   {
-    title: "Maintenance & Fabrication",
-    desc: "Shutdown crews, retrofits, fabrication, QA/QC & commissioning.",
+    title: "Maintenance Services",
+    desc: "Expert maintenance teams for shutdowns, retrofits, equipment repairs, and ongoing site support. Reliable manpower for power, metal, and cement industries.",
     icon: (
       <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"
         className="w-10 h-10 text-green-700 group-hover:scale-110 transition-transform duration-200"
@@ -88,8 +88,8 @@ export default function HomePage() {
         overlayDir="b"
         overlayClassName="from-slate-900/55 via-slate-900/25 to-transparent"
         imageClassName="brightness-110 contrast-105"
-        title="Industrial Supply, EPC Support & On-site Execution"
-        subtitle="Critical spares, retrofits, and custom fabrication for power & process plants — delivered with QA/QC documentation, safety compliance, and on-time execution."
+        title="Excellence in Plant Engineering, Maintenance & Support"
+        subtitle="Supplying genuine spares for power plants, cement, and manufacturing industries."
         align="left"
         priority
         bottomFade

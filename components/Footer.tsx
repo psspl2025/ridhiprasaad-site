@@ -29,7 +29,7 @@ export default function Footer() {
   const year = new Date().getFullYear();
 
   return (
-    <footer className="relative mt-20">
+    <footer className="relative mt-10">
       {/* === Top accent border === */}
       <div className="h-[3px] w-full bg-amber-400" />
       
