@@ -5,11 +5,11 @@ import { usePathname } from "next/navigation";
 import { Menu } from "lucide-react";
 import { useEffect, useMemo, useState } from "react";
 
-/** Main nav */
+// Main nav links
 const nav = [
   { href: "/", label: "Home" },
   { href: "/about", label: "About" },
-  { href: "/team", label: "Team" }, // ← missing comma fixed
+  { href: "/team", label: "Team" },
   { href: "/services", label: "Services" },
   { href: "/products", label: "Products" },
   { href: "/contact", label: "Contact" },
@@ -24,35 +24,6 @@ function useHeaderElevation(threshold = 4) {
     return () => window.removeEventListener("scroll", onScroll);
   }, [threshold]);
   return elevated;
-}
-
-function useScrollSpy(hashes: string[]) {
-  const [activeHash, setActiveHash] = useState<string | null>(null);
-
-  useEffect(() => {
-    const ids = hashes.map((h) => h.replace(/^#/, "")).filter(Boolean);
-    if (!ids.length) return;
-
-    const els = ids
-      .map((id) => document.getElementById(id))
-      .filter((el): el is HTMLElement => !!el);
-    if (!els.length) return;
-
-    const observer = new IntersectionObserver(
-      (entries) => {
-        const visible = entries
-          .filter((e) => e.isIntersecting)
-          .sort((a, b) => (b.intersectionRatio || 0) - (a.intersectionRatio || 0))[0];
-        if (visible?.target?.id) setActiveHash(`#${visible.target.id}`);
-      },
-      { rootMargin: "-20% 0px -60% 0px", threshold: [0.25, 0.5, 0.75] }
-    );
-
-    els.forEach((el) => observer.observe(el));
-    return () => observer.disconnect();
-  }, [hashes.join(",")]);
-
-  return activeHash;
 }
 
 function NavLink({
@@ -72,12 +43,13 @@ function NavLink({
       onClick={onClick}
       aria-current={isActive ? "page" : undefined}
       className={[
-        "relative text-sm font-medium transition",
-        isActive ? "text-gray-900" : "text-gray-600 hover:text-gray-900",
-        "after:absolute after:-bottom-1 after:left-0 after:h-[2px] after:rounded-full",
+        "relative text-sm font-semibold transition",
+        // Accent color for active, brand consistency!
         isActive
-          ? "after:w-full after:bg-amber-500"
-          : "after:w-0 after:bg-gray-300 hover:after:w-full hover:after:bg-amber-300",
+          ? "text-amber-500 after:bg-amber-500"
+          : "text-gray-600 hover:text-amber-400 after:bg-gray-300 hover:after:bg-amber-300",
+        "after:absolute after:-bottom-1 after:left-0 after:h-[2px] after:rounded-full",
+        isActive ? "after:w-full" : "after:w-0 hover:after:w-full",
         "after:transition-all after:duration-300",
       ].join(" ")}
     >
@@ -90,31 +62,12 @@ export default function Header() {
   const pathname = usePathname();
   const elevated = useHeaderElevation(4);
 
-  // Close the mobile menu on route change
+  // Mobile menu state
   const [open, setOpen] = useState(false);
   useEffect(() => setOpen(false), [pathname]);
 
-  const samePageHashes = useMemo(
-    () =>
-      nav
-        .map((n) => n.href)
-        .filter((h) => h.startsWith("/") && h.includes("#"))
-        .map((h) => h.split("#")[1])
-        .filter(Boolean)
-        .map((id) => `#${id}`),
-    []
-  );
-  const activeHash = useScrollSpy(samePageHashes);
-
   const isActive = (href: string) => {
-    if (href.includes("#") && typeof window !== "undefined") {
-      const [base, hash] = href.split("#");
-      const onSamePath = base === pathname;
-      if (onSamePath && activeHash && activeHash === `#${hash}`) return true;
-      if (onSamePath && window.location.hash === `#${hash}`) return true;
-      return false;
-    }
-    // Normalize trailing slash
+    // Normalize trailing slash for true matching
     const norm = (s: string) => (s !== "/" ? s.replace(/\/+$/, "") : s);
     return norm(href) === norm(pathname);
   };
@@ -122,26 +75,41 @@ export default function Header() {
   return (
     <header
       className={[
-        "sticky top-0 z-50 border-b bg-white/80 backdrop-blur-md transition-shadow",
-        elevated ? "border-gray-200 shadow-sm" : "border-transparent",
+        "sticky top-0 z-50 bg-white/85 backdrop-blur-md transition-shadow border-b border-amber-400",
+        elevated ? "shadow-md" : "shadow-none",
       ].join(" ")}
+      role="banner"
     >
       <div className="container-xl flex h-16 items-center justify-between">
-        <Link href="/" className="font-display text-xl font-extrabold tracking-tight text-gray-900">
-          Ridhiprasaad<span className="text-brand-accent">.</span>
+        {/* Logo + Brand */}
+        <Link
+          href="/"
+          className="flex items-center gap-2 font-display text-xl font-extrabold tracking-tight text-gray-900"
+        >
+          {/* Update src to your actual logo file */}
+          <img src="/logo-industrial.svg" alt="Ridhiprasaad logo" className="h-8 w-8" />
+          Ridhiprasaad<span className="text-amber-500">.</span>
         </Link>
 
-        <nav className="hidden md:flex items-center gap-6">
+        <nav className="hidden md:flex items-center gap-6" aria-label="Main Navigation">
           {nav.map((n) => (
             <NavLink key={n.href} href={n.href} label={n.label} isActive={isActive(n.href)} />
           ))}
-          <Link href="/contact" className="btn-primary shadow-sm">
+          {/* Optionally add WhatsApp quick contact (desktop) */}
+          {/* <a href="https://wa.me/yournumber" target="_blank" rel="noopener" aria-label="WhatsApp" className="ml-1">
+            <svg className="h-6 w-6 text-amber-500 hover:text-amber-600 transition" fill="currentColor" viewBox="0 0 24 24"><path d="..."/></svg>
+          </a> */}
+          <Link
+            href="/contact"
+            className="btn-primary shadow-lg transition hover:shadow-amber-400/40 focus:ring-2 focus:ring-amber-500/40"
+          >
             Get Quote
           </Link>
         </nav>
 
+        {/* Hamburger for mobile */}
         <button
-          className="md:hidden text-gray-700 rounded-lg p-1.5 focus:outline-none focus:ring-2 focus:ring-amber-500/50"
+          className="md:hidden text-gray-700 rounded-lg p-2 focus:outline-none focus:ring-2 focus:ring-amber-500/50"
           onClick={() => setOpen((v) => !v)}
           aria-label="Toggle menu"
           aria-expanded={open}
@@ -150,8 +118,9 @@ export default function Header() {
         </button>
       </div>
 
+      {/* Mobile menu */}
       {open && (
-        <div className="md:hidden border-t border-gray-200 bg-white/95 backdrop-blur-sm">
+        <div className="md:hidden border-t border-amber-200 bg-white/95 backdrop-blur-sm animate-fade-in-down">
           <div className="container-xl py-3 grid gap-3">
             {nav.map((n) => (
               <NavLink
@@ -162,9 +131,17 @@ export default function Header() {
                 onClick={() => setOpen(false)}
               />
             ))}
-            <Link href="/contact" className="btn-primary w-fit" onClick={() => setOpen(false)}>
+            <Link
+              href="/contact"
+              className="btn-primary w-fit my-3 shadow-lg"
+              onClick={() => setOpen(false)}
+            >
               Get Quote
             </Link>
+            {/* WhatsApp/quick contact for mobile */}
+            {/* <a href="https://wa.me/yournumber" target="_blank" rel="noopener" aria-label="WhatsApp" className="mx-auto my-1">
+              <svg className="h-6 w-6 text-amber-500 hover:text-amber-600 transition" fill="currentColor" viewBox="0 0 24 24"><path d="..."/></svg>
+            </a> */}
           </div>
         </div>
       )}

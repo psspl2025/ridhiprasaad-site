@@ -46,7 +46,8 @@ export default function ContactPage() {
           <div className="card p-6">
             <div className="text-gray-600 text-sm">Location</div>
             <div className="mt-1 font-semibold">
-              Above One Step Saloon, Milan Chowk, Chandrapur, Maharashtra, IN
+              Above One Step Saloon,
+Near Ramdeo Baba Temple, Milan Sq., Chandrapur, Maharashtra — 442402
             </div>
           </div>
         </section>

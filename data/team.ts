@@ -10,17 +10,18 @@ tools for traceability, dashboards, and faster decisions.`;
 
 export const directors: Person[] = [
   {
-    name: "Mr. Prasad Jorgewar",
-    title: "Director",
-    description:
-      "Accomplished commerce graduate overseeing operational excellence at our cement bag manufacturing unit. Active in real estate ventures and strategic business development.",
-  },
-  {
     name: "Mr. Pawan Saraf",
     title: "Director",
     description:
       "Visionary leader across multiple enterprises (₹100+ Cr turnover) including luxury jewellery and B2B software. Focused on sustainable growth and strategic partnerships.",
   },
+  {
+    name: "Mr. Prasad Jorgewar",
+    title: "Director",
+    description:
+      "Accomplished commerce graduate overseeing operational excellence at our cement bag manufacturing unit. Active in real estate ventures and strategic business development.",
+  },
+  
 ];
 
 export const teamMembers: Person[] = [
