@@ -9,8 +9,9 @@ import { useEffect, useMemo, useState } from "react";
 const nav = [
   { href: "/", label: "Home" },
   { href: "/about", label: "About" },
+  { href: "/team", label: "Team" }, // ← missing comma fixed
   { href: "/services", label: "Services" },
-  { href: "/products", label: "Products" }, // ✅ updated
+  { href: "/products", label: "Products" },
   { href: "/contact", label: "Contact" },
 ];
 
@@ -69,6 +70,7 @@ function NavLink({
     <Link
       href={href}
       onClick={onClick}
+      aria-current={isActive ? "page" : undefined}
       className={[
         "relative text-sm font-medium transition",
         isActive ? "text-gray-900" : "text-gray-600 hover:text-gray-900",
@@ -88,6 +90,10 @@ export default function Header() {
   const pathname = usePathname();
   const elevated = useHeaderElevation(4);
 
+  // Close the mobile menu on route change
+  const [open, setOpen] = useState(false);
+  useEffect(() => setOpen(false), [pathname]);
+
   const samePageHashes = useMemo(
     () =>
       nav
@@ -100,8 +106,6 @@ export default function Header() {
   );
   const activeHash = useScrollSpy(samePageHashes);
 
-  const [open, setOpen] = useState(false);
-
   const isActive = (href: string) => {
     if (href.includes("#") && typeof window !== "undefined") {
       const [base, hash] = href.split("#");
@@ -110,7 +114,9 @@ export default function Header() {
       if (onSamePath && window.location.hash === `#${hash}`) return true;
       return false;
     }
-    return href === pathname;
+    // Normalize trailing slash
+    const norm = (s: string) => (s !== "/" ? s.replace(/\/+$/, "") : s);
+    return norm(href) === norm(pathname);
   };
 
   return (
@@ -135,9 +141,10 @@ export default function Header() {
         </nav>
 
         <button
-          className="md:hidden text-gray-700"
+          className="md:hidden text-gray-700 rounded-lg p-1.5 focus:outline-none focus:ring-2 focus:ring-amber-500/50"
           onClick={() => setOpen((v) => !v)}
           aria-label="Toggle menu"
+          aria-expanded={open}
         >
           <Menu className="size-6" />
         </button>
