@@ -5,16 +5,8 @@ import { Inter, League_Spartan } from "next/font/google";
 import Header from "../components/Header";
 import Footer from "../components/Footer";
 
-const inter = Inter({
-  subsets: ["latin"],
-  variable: "--font-inter",
-  display: "swap",
-});
-const spartan = League_Spartan({
-  subsets: ["latin"],
-  variable: "--font-spartan",
-  display: "swap",
-});
+const inter = Inter({ subsets: ["latin"], variable: "--font-inter", display: "swap" });
+const spartan = League_Spartan({ subsets: ["latin"], variable: "--font-spartan", display: "swap" });
 
 export const viewport: Viewport = {
   width: "device-width",
@@ -34,37 +26,27 @@ export const metadata: Metadata = {
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="en" className={`${inter.variable} ${spartan.variable}`}>
-      <body
-        className="
-          bg-white text-gray-900 antialiased
-          container-xl--fluid     /* full-width site: no gutters globally */
-        "
-      >
-        {/* Accessibility: skip straight to main content */}
+      <body className="bg-white text-gray-900 antialiased">
+        {/* Skip link */}
         <a
           href="#main"
-          className="sr-only focus:not-sr-only focus:absolute focus:left-4 focus:top-4
-                     rounded-md bg-black/80 px-3 py-2 text-white"
+          className="sr-only focus:not-sr-only focus:absolute focus:left-4 focus:top-4 rounded-md bg-black/80 px-3 py-2 text-white"
         >
           Skip to content
         </a>
 
-        {/* Header stays aligned using section padding */}
+        {/* Header aligned to site grid */}
         <div className="section">
           <Header />
         </div>
 
-        {/* Main is fluid; individual pages decide:
-            - use <PageHero fullBleed /> for edge-to-edge heroes
-            - wrap sections with className='section' for page padding */}
+        {/* Main area – pages decide padding/bleed */}
         <main id="main" className="min-h-[70vh]">
           {children}
         </main>
 
-        {/* Footer aligned to site grid */}
-        <div className="section">
-          <Footer />
-        </div>
+        {/* Footer must be OUTSIDE .section to avoid side paddings */}
+        <Footer />
       </body>
     </html>
   );
