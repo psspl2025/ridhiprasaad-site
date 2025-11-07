@@ -1,137 +1,195 @@
 // app/about/page.tsx
-import Link from "next/link";
-import {
-  CheckCircle2, Shield, Factory, Wrench, Timer, MapPin, FileDown, Compass, Target,
-} from "lucide-react";
+"use client";
 
+import Image from "next/image";
 import PageHero from "@/components/PageHero";
-import EmphasisCard from "@/components/EmphasisCard";
-import HowWeWork from "@/components/HowWeWork";
-import CoverageMap from "@/components/CoverageMap";
 
-import Badge from "@/components/Badge";
-import { VISION, MISSION } from "@/data/team";
+/* ---------- Copy (edit anytime) ---------- */
+const ABOUT_US = `
+Ridhiprasaad Supplier Pvt. Ltd. is a multidisciplinary engineering services and industrial
+procurement partner for continuous-process industries—power generation, cement, metals and
+heavy manufacturing. We specialise in plant maintenance & reliability, shutdown execution,
+skilled technical manpower and compliant industrial supplies.
 
-const BADGES = ["GST Registered", "UDYAM", "MSME", "ISO-ready"];
-const AT_A_GLANCE_ITEMS = [
-  { icon: <CheckCircle2 className="size-4 text-amber-500" />, text: "98%+ on-time deliveries" },
-  { icon: <Timer className="size-4 text-amber-500" />, text: "24–72h fast-track dispatch" },
-  { icon: <Factory className="size-4 text-amber-500" />, text: "2000+ SKUs supplied" },
-  { icon: <Wrench className="size-4 text-amber-500" />, text: "Shutdown & retrofit execution" },
-  { icon: <Shield className="size-4 text-amber-500" />, text: "QA/QC docs: MTCs, ITP, DC, invoices" },
-];
-const OPERATING_REGIONS = ["Maharashtra (HQ)", "Chhattisgarh", "Madhya Pradesh", "Telangana", "Gujarat", "Goa"];
+Our execution model blends field-proven practices with disciplined safety management (PTW/LOTO, JSA)
+and transparent QA/QC documentation. With certified crews and a vetted vendor network, we deliver
+safe, cost-efficient and on-schedule outcomes that extend asset life and improve plant uptime.
+`;
+
+const VISION = `To be a trusted national partner for industrial reliability—known for safe execution,
+technical integrity and measurable performance improvement across India’s core sectors.`;
+
+const MISSION = `Deliver reliable engineering services, skilled manpower and quality supplies that reduce
+unplanned downtime, improve efficiency and strengthen lifecycle performance of plant assets.`;
+
+/* ---------- Full-bleed background panel with gradient+tint overlays ---------- */
+/* Text sits in `.content` so it lines up with the Hero.
+   A glass "card" sits behind the text only (backdrop blur, soft border). */
+function VMPanelFull({
+  heading,
+  sub,
+  body,
+  image,
+  gradient = "from-slate-950/80 via-slate-900/50 to-transparent",
+  tint = "bg-slate-800/20",
+  align = "left", // "left" | "center" | "right"
+}: {
+  heading: string;
+  sub?: string;
+  body: string;
+  image: string;
+  gradient?: string;
+  tint?: string;
+  align?: "left" | "center" | "right";
+}) {
+  const alignText =
+    align === "left" ? "text-left" : align === "right" ? "text-right" : "text-center";
+  const justify =
+    align === "left" ? "justify-start" : align === "right" ? "justify-end" : "justify-center";
+
+  return (
+    <section className="relative w-full overflow-hidden">
+      {/* Background image (full bleed) */}
+      <div className="absolute inset-0 -z-10">
+        <Image
+          src={image}
+          alt={heading}
+          fill
+          className="object-cover"
+          sizes="100vw"
+          priority={false}
+        />
+      </div>
+
+      {/* Readability overlays */}
+      <div className={`absolute inset-0 -z-10 bg-gradient-to-r ${gradient}`} />
+      <div className={`absolute inset-0 -z-10 ${tint}`} />
+
+      {/* Content area uses the same gutter as the Hero via `.content` */}
+      <div className="w-full min-h-[44vh] md:min-h-[52vh] py-10 md:py-14">
+        <div className="content flex w-full items-center ${justify}">
+          {/* Glass card behind only the text */}
+          <div
+            className={[
+              "inline-block max-w-5xl",
+              "rounded-2xl border border-white/15",
+              "bg-white/8 backdrop-blur-md",
+              "shadow-[0_8px_32px_rgba(2,6,23,0.35)]",
+              "px-5 py-5 md:px-7 md:py-7",
+              alignText,
+            ].join(" ")}
+          >
+            {/* Attractive small label (consistent with site) */}
+            <span className="inline-flex items-center gap-2 rounded-full bg-white/10 px-3 py-1 text-[11px] md:text-xs font-semibold uppercase tracking-widest text-white/90 ring-1 ring-white/20">
+              {heading}
+              <span className="inline-block h-1 w-2 rounded bg-amber-400" />
+            </span>
+
+            {/* Main title */}
+            {sub && (
+              <h3 className="mt-2 font-display text-2xl md:text-3xl font-extrabold text-white leading-tight">
+                {sub}
+              </h3>
+            )}
+
+            {/* Underline accent */}
+            <div className="mt-2 h-1 w-16 rounded-full bg-gradient-to-r from-amber-400 via-amber-500 to-yellow-400" />
+
+            {/* Body */}
+            <p className="mt-4 whitespace-pre-line leading-relaxed md:text-lg text-white/95">
+              {body}
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+  );
+}
+
+/* ---------- Decorative full-width divider (wave + dotted spacer) ---------- */
+function SectionDivider() {
+  return (
+    <div className="relative w-full bg-white">
+      <svg
+        className="block w-full h-10 md:h-14"
+        viewBox="0 0 1440 120"
+        preserveAspectRatio="none"
+        aria-hidden
+      >
+        <path
+          d="M0,72 C240,12 480,132 720,84 C960,36 1200,78 1440,36 L1440,120 L0,120 Z"
+          fill="white"
+        />
+      </svg>
+      <div className="pattern-dots flex items-center justify-center h-10 md:h-14">
+        <div className="h-1.5 w-24 rounded-full bg-gradient-to-r from-amber-400 via-amber-500 to-yellow-400" />
+      </div>
+    </div>
+  );
+}
 
 export default function AboutPage() {
   return (
     <div className="w-full">
+      {/* HERO */}
       <PageHero
-  fullBleed
-  priority
-  image="/hero/about-hero.webp?v=1"
-  overlayDir="b"
-  overlayClassName="from-slate-900/55 via-slate-900/35 to-transparent"
-  title="Expertise That Drives Results."
-  subtitle="Engineering leadership, proven execution, and strong industry partnerships across power & process sectors."
-  align="left"
-  objectPosition="center 48%"
-/>
+        fullBleed
+        priority
+        image="/hero/about-hero.webp?v=5"
+        overlayDir="b"
+        overlayClassName="from-slate-950/65 via-slate-900/40 to-transparent"
+        title="Expertise That Drives Results."
+        subtitle="Engineering leadership, proven execution, and strong industry partnerships across power & process sectors."
+        align="left"
+        objectPosition="center 48%"
+        minH="min-h-[340px] md:min-h-[440px]"
+      />
 
-
-      {/* Vision / Mission + At-a-glance */}
-      <section className="py-12">
-        <div className="content grid gap-8 lg:grid-cols-3">
-          <div className="lg:col-span-2 grid gap-8 sm:grid-cols-2">
-            <EmphasisCard label="Vision" title="Where we’re going" body={VISION} icon={Compass} />
-            <EmphasisCard label="Mission" title="What we do daily" body={MISSION} icon={Target} />
-          </div>
-          <aside className="card p-6 bg-gradient-to-br from-white to-amber-50/20">
-            <div className="text-xs font-semibold uppercase tracking-wider text-amber-600">At a glance</div>
-            <ul className="mt-3 divide-y divide-gray-100 text-sm text-gray-700">
-              {AT_A_GLANCE_ITEMS.map(({ icon, text }, i) => (
-                <li key={i} className="flex items-center gap-3 py-2 first:pt-0 last:pb-0">{icon}<span>{text}</span></li>
-              ))}
-            </ul>
-            <div className="mt-4 flex flex-wrap gap-2">
-              {BADGES.map((label) => <Badge key={label}>{label}</Badge>)}
-            </div>
-          </aside>
+      {/* ABOUT US — centered, no card */}
+      <section className="py-10 md:py-14 bg-white">
+        <div className="mx-auto max-w-4xl text-center">
+          <h2 className="font-display text-2xl md:text-3xl font-extrabold text-gray-900">
+            About Us
+          </h2>
+          <div className="mx-auto mt-3 h-1.5 w-24 rounded-full bg-gradient-to-r from-amber-400 via-amber-500 to-yellow-400" />
+          <p className="mx-auto mt-6 max-w-4xl whitespace-pre-line leading-relaxed text-gray-800 md:text-lg">
+            {ABOUT_US}
+          </p>
         </div>
       </section>
 
-      <div className="content my-12 h-px w-full bg-gray-100" />
+      {/* MISSION — full width, text aligned to Hero gutter with glass card */}
+      <VMPanelFull
+        heading="Our Mission"
+        sub="What we do daily"
+        body={MISSION}
+        image="/images/about/mission-bg.png?v=5"
+        gradient="from-slate-950/80 via-slate-900/55 to-transparent"
+        tint="bg-sky-900/20"
+        align="left"
+      />
 
-      {/* HOW WE WORK */}
-      <section className="py-2">
-        <div className="content">
-          <h2 className="font-display text-2xl md:text-3xl font-bold text-gray-900">How We Work</h2>
-          <p className="mt-2 max-w-3xl text-gray-700">Standardized workflow to ensure clarity, documentation, accountability, and timely execution.</p>
-          <div className="mt-8">
-            <HowWeWork steps={[
-              { num: "01", title: "Requirement & BOQ Understanding", desc: "We assess technical specs, alternates, and realistic lead times." },
-              { num: "02", title: "Commercial Alignment", desc: "Transparent pricing, delivery terms, QA/QC formats, and dispatch plan." },
-              { num: "03", title: "Execution & Documentation", desc: "Procurement, inspection, site support, PTW/LOTO, JSA & records." },
-              { num: "04", title: "Handover & Support", desc: "Final dossiers, commissioning help & ongoing availability support." },
-            ]}/>
-          </div>
-        </div>
-      </section>
+      {/* Spacer between Mission and Vision */}
+      <SectionDivider />
 
-      <div className="content my-12 h-px w-full bg-gray-100" />
+      {/* VISION — full width, text aligned to Hero gutter with glass card */}
+      <VMPanelFull
+        heading="Our Vision"
+        sub="Where we’re going"
+        body={VISION}
+        image="/images/about/vision-bg.png?v=5"
+        gradient="from-slate-950/80 via-slate-900/50 to-transparent"
+        tint="bg-emerald-900/20"
+        align="left"
+      />
 
-      {/* Operating Regions */}
-      <section className="py-12">
-        <div className="content">
-          <div className="mb-4">
-            <h2 className="font-display text-2xl md:text-3xl font-bold text-gray-900">Operating Regions</h2>
-            <p className="mt-1 text-gray-700">Maharashtra as the core base — projects across MP, Chhattisgarh, Telangana, Gujarat, and Goa.</p>
-          </div>
-          <div className="grid gap-6 md:grid-cols-3">
-            <article className="rounded-2xl border border-gray-200 bg-white p-5 shadow-sm">
-              <div className="text-sm font-semibold text-gray-900">Outline (Minimal)</div>
-              <CoverageMap style="outline" />
-              <div className="mt-2 text-xs text-gray-600">Clean outline for decks & docs.</div>
-            </article>
-            <article className="rounded-2xl border border-gray-200 bg-white p-5 shadow-sm">
-              <div className="text-sm font-semibold text-gray-900">Gradient Heatmap</div>
-              <CoverageMap style="heat" />
-              <div className="mt-2 text-xs text-gray-600">Highlights Maharashtra footprint.</div>
-            </article>
-            <article className="rounded-2xl border border-gray-200 bg-white p-5 shadow-sm">
-              <div className="text-sm font-semibold text-gray-900">Pin Markers</div>
-              <CoverageMap style="pins" />
-              <div className="mt-2 text-xs text-gray-600">Major industrial hubs (schematic).</div>
-            </article>
-          </div>
-          <div className="mt-4 flex flex-wrap gap-2">
-            {OPERATING_REGIONS.map((r) => <Badge key={r}>{r}</Badge>)}
-          </div>
-        </div>
-      </section>
-
-      {/* CTA */}
-      <section className="py-14">
-        <div className="content">
-          <div className="card grid items-center gap-6 p-8 md:grid-cols-2">
-            <div>
-              <h3 className="font-display text-2xl font-bold text-gray-900">Work with us</h3>
-              <p className="mt-2 text-gray-700">Share your scope, BOQ, and timelines. We’ll propose makes, lead times, and commercial terms.</p>
-              <div className="mt-4 flex flex-wrap gap-3">
-                <Link href="/contact" className="btn-primary">Discuss Your Project</Link>
-                <Link href="/team" className="btn-ghost">Meet the Team</Link>
-                <a href="/files/company-profile.pdf" className="btn-ghost inline-flex items-center gap-2">
-                  <FileDown className="size-4" /> Company Profile (PDF)
-                </a>
-              </div>
-            </div>
-            <div className="grid gap-3 text-sm">
-              <div className="flex items-center gap-2 text-gray-700"><MapPin className="size-4 text-amber-500" /> Chandrapur, Maharashtra (projects across India)</div>
-              <div className="flex items-center gap-2 text-gray-700"><Shield className="size-4 text-amber-500" /> Safety: PTW/LOTO, JSA, inductions — documented daily</div>
-              <div className="flex items-center gap-2 text-gray-700"><Wrench className="size-4 text-amber-500" /> Execution: skilled crews, supervision, QA/QC, commissioning assistance</div>
-            </div>
-          </div>
-        </div>
-      </section>
+      {/* local style for dotted pattern */}
+      <style jsx global>{`
+        .pattern-dots {
+          background-image: radial-gradient(rgba(15, 23, 42, 0.06) 1.2px, transparent 1.2px);
+          background-size: 12px 12px;
+        }
+      `}</style>
     </div>
   );
 }

@@ -4,21 +4,37 @@ import type { Person } from "@/data/team";
 import { directors, teamMembers } from "@/data/team";
 import clsx from "clsx";
 
-/* ---------------- Director card (wide, centered) ---------------- */
-function DirectorCard({ p }: { p: Person }) {
+/* ---------------- Director card (alternating left/right) ---------------- */
+function DirectorCard({ p, flip = false }: { p: Person; flip?: boolean }) {
   return (
-    <article className="mx-auto w-full max-w-xl rounded-2xl border bg-white shadow-sm overflow-hidden">
-      <div className="aspect-[16/9] w-full overflow-hidden">
-        <img
-          src={p.photo || "/images/avatar-placeholder.jpg"}
-          alt={p.name}
-          className="h-full w-full object-cover"
-        />
-      </div>
-      <div className="p-5">
-        <h3 className="text-xl font-bold text-gray-900">{p.name}</h3>
-        <p className="text-sm font-medium text-amber-700">{p.title}</p>
-        {p.description && <p className="mt-2 text-sm text-gray-700">{p.description}</p>}
+    <article className="mx-auto w-full rounded-2xl bg-white shadow-sm overflow-hidden">
+      <div
+        className={clsx(
+          "flex flex-col md:flex-row items-stretch",
+          flip && "md:flex-row-reverse"
+        )}
+      >
+        {/* TEXT PANEL */}
+        <div className="md:w-1/2 w-full bg-[#0C1B32] text-white p-8 md:p-10 flex flex-col justify-center">
+          {p.description && (
+            <p className="text-lg md:text-xl font-medium italic leading-relaxed text-slate-100/90">
+              “{p.description}”
+            </p>
+          )}
+          <div className="mt-8">
+            <h3 className="text-2xl font-bold">{p.name}</h3>
+            <p className="text-sm font-semibold text-amber-400/90">{p.title}</p>
+          </div>
+        </div>
+
+        {/* PHOTO PANEL */}
+        <div className="md:w-1/2 w-full relative min-h-[280px] md:min-h-[420px]">
+          <img
+            src={p.photo || "/images/avatar-placeholder.jpg"}
+            alt={p.name}
+            className="absolute inset-0 h-full w-full object-cover"
+          />
+        </div>
       </div>
     </article>
   );
@@ -26,7 +42,6 @@ function DirectorCard({ p }: { p: Person }) {
 
 /* ---------------- Team card (ribbon, zig-zag) ---------------- */
 function TeamRibbonCard({ p, index }: { p: Person; index: number }) {
-  // alternate colors + ribbon tail direction
   const palette = [
     { bg: "bg-violet-700", dot: "bg-violet-500" },
     { bg: "bg-amber-500", dot: "bg-amber-400" },
@@ -108,28 +123,42 @@ export default function TeamPage() {
         bottomFade
       />
 
-      {/* Directors — centered, two wide cards */}
-      {leadership.length > 0 && (
-        <section className="py-14">
-          <div className="content">
-            <h2 className="mb-6 text-center font-display text-2xl md:text-3xl font-bold text-gray-900">
-              Directors
-            </h2>
-            <div className="mx-auto grid max-w-5xl grid-cols-1 gap-8 md:grid-cols-2">
-              {leadership.map((p) => (
-                <DirectorCard key={p.name} p={p} />
-              ))}
+ {/* Directors — stacked, alternating with transparent color backgrounds */}
+{leadership.length > 0 && (
+  <section className="relative py-14 md:py-20">
+    <div className="content">
+      <h2 className="mb-10 text-center font-display text-2xl md:text-3xl font-bold text-gray-900">
+        Our Directors
+      </h2>
+
+      <div className="space-y-10">
+        {leadership.map((p, i) => (
+          <div
+            key={p.name}
+            className={clsx(
+              "w-screen relative left-1/2 right-1/2 -translate-x-1/2 py-6 md:py-8",
+              i % 2 === 0
+                ? "bg-[#0C1B32]/08" // soft navy tint
+                : "bg-[#D4A44F]/08" // soft golden tint
+            )}
+          >
+            <div className="mx-auto max-w-5xl px-4">
+              <DirectorCard p={p} flip={i % 2 === 1} />
             </div>
           </div>
-        </section>
-      )}
+        ))}
+      </div>
+    </div>
+  </section>
+)}
+
 
       {/* Team — zig-zag ribbon layout showing descriptions */}
       {core.length > 0 && (
         <section className="py-6 md:py-10">
           <div className="content">
-            <h2 className="mb-6 font-display text-2xl md:text-3xl font-bold text-gray-900">
-              Core Team
+            <h2 className="mb-10 text-center font-display text-2xl md:text-3xl font-bold text-gray-900">
+              Our Core Team
             </h2>
 
             <div className="grid gap-10 md:grid-cols-2 lg:grid-cols-4">
