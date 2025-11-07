@@ -85,7 +85,7 @@ export default function Header() {
           className="flex items-center font-display text-xl font-extrabold tracking-tight text-gray-900"
         >
           {/* Use increased size: h-12 w-12 */}
-          <img src="/logo-industrial.png" alt="Ridhiprasaad logo" className="h-[60px] w-[160px]" />
+          <img src="/rspl.png" alt="Ridhiprasaad logo" className="h-[60px] w-[160px]" />
 
         </Link>
 
