@@ -44,7 +44,6 @@ function NavLink({
       aria-current={isActive ? "page" : undefined}
       className={[
         "relative text-sm font-semibold transition",
-        // Accent color for active, brand consistency!
         isActive
           ? "text-amber-500 after:bg-amber-500"
           : "text-gray-600 hover:text-amber-400 after:bg-gray-300 hover:after:bg-amber-300",
@@ -67,7 +66,6 @@ export default function Header() {
   useEffect(() => setOpen(false), [pathname]);
 
   const isActive = (href: string) => {
-    // Normalize trailing slash for true matching
     const norm = (s: string) => (s !== "/" ? s.replace(/\/+$/, "") : s);
     return norm(href) === norm(pathname);
   };
@@ -81,14 +79,14 @@ export default function Header() {
       role="banner"
     >
       <div className="container-xl flex h-16 items-center justify-between">
-        {/* Logo + Brand */}
+        {/* Logo Only */}
         <Link
           href="/"
-          className="flex items-center gap-2 font-display text-xl font-extrabold tracking-tight text-gray-900"
+          className="flex items-center font-display text-xl font-extrabold tracking-tight text-gray-900"
         >
-          {/* Update src to your actual logo file */}
-          <img src="/logo-industrial.svg" alt="Ridhiprasaad logo" className="h-8 w-8" />
-          Ridhiprasaad<span className="text-amber-500">.</span>
+          {/* Use increased size: h-12 w-12 */}
+          <img src="/logo-industrial.png" alt="Ridhiprasaad logo" className="h-[60px] w-[160px]" />
+
         </Link>
 
         <nav className="hidden md:flex items-center gap-6" aria-label="Main Navigation">
